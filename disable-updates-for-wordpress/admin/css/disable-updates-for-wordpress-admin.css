@@ -1,0 +1,194 @@
+#dufw-setting-container .checked-icon { display: block; opacity: 0;}
+#dufw-setting-container .rad-icon { opacity: 0; background-color: transparent; border: 2px solid white; height: 20px; width: 20px; border-radius: 50%; margin: 5px auto; display: block; }
+
+*{ 
+    box-sizing: border-box;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    -o-box-sizing:border-box;
+    word-wrap: break-word;
+}
+
+#dufw-setting-container .dufw-cards-wrap
+{
+    display: flex;
+}
+#dufw-setting-container .dufw-card {
+    background-color: white;
+    width: 30vw;
+    height: 100%;
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-flow: column;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 2% 4%;
+    margin: 20px;
+}
+
+
+#dufw-setting-container .input-row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    /*justify-content: space-evenly;*/
+    justify-content: space-between;
+    padding: 5px;
+}
+
+#dufw-setting-container .checkbox, #dufw-setting-container .radio {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    display: block;
+}
+
+.dufw-plugins-wrap, .dufw-themes-wrap
+{
+    width: 100%;
+    height: 70vh;
+    overflow-x: hidden;
+    padding: 10px;
+    overflow-y: auto;
+    padding-right: 40px;
+}
+
+/* width */
+#dufw-setting-container ::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+#dufw-setting-container ::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+#dufw-setting-container ::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+#dufw-setting-container ::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+#dufw-setting-container .check, #dufw-setting-container .rad {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: #e3eefa;
+}
+#dufw-setting-container .check { border-radius: 3px; transition: all 0.4s; }
+#dufw-setting-container .rad {border-radius: 50%; transition: all 0.4s; }
+
+#dufw-setting-container .checkbox.on .check, #dufw-setting-container .radio.on .rad { background-color: #4287f5; }
+#dufw-setting-container .checkbox.on .checked-icon, #dufw-setting-container .radio.on .rad-icon {
+    opacity: 1; 
+    text-align: center;
+    animation-name: eh;
+    animation-duration: 0.3s;
+}
+
+#dufw-setting-container .checkbox .checked-icon, #dufw-setting-container .radio .rad-icon { transition: opacity 0.3s ease-out; }
+
+#dufw-setting-container .toggle {
+    position: relative;
+    width: 60px;
+    height: 34px;
+    display: inline-block;
+}
+
+#dufw-setting-container .toggle .slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+#dufw-setting-container .toggle .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+    box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.05);
+}
+
+#dufw-setting-container .toggle .slider { background-color: #e3eefa; }
+#dufw-setting-container .toggle.on .slider { background-color: #4287f5; }
+#dufw-setting-container .toggle.on .slider:before { transform: translateX(26px); box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2); }
+
+#dufw-setting-container .toggle .label { position: absolute; left: 70px; top: 4px; vertical-align: middle; }
+#dufw-setting-container .checkbox .label, .radio .label { position: absolute; left: 50px; top: 4px; vertical-align: middle; }
+
+.dufw-card input { height: 100%; width: 100%; opacity: 0; position: absolute; z-index: 100; cursor: pointer; vertical-align: middle;}
+
+/* -- DISABLED -- */
+
+#dufw-setting-container .toggle.disabled .slider { background-color: #ededed; }
+#dufw-setting-container .toggle.disabled .slider::before { box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.05); }
+#dufw-setting-container .checkbox.disabled .check, #dufw-setting-container .radio.disabled .rad { background-color: #ededed; }
+
+#dufw-setting-container .disabled .label { color: #bababa; }
+.dufw-card .disabled input { pointer-events: none; }
+
+/* -- FOCUS -- */
+
+#dufw-setting-container .toggle.focus .slider, #dufw-setting-container .checkbox.focus .check, #dufw-setting-container .radio.focus .rad { box-shadow: 0px 0px 0px 2px #bababa; transition: all 0.4s; }
+#dufw-setting-container .focus .label { text-shadow: 0px 0px 3px #bababa; transition: all 0.4s; }
+
+
+.toplevel_page_dufw_admin_menu_settings_page #message
+{
+    z-index: 999999999;
+    width: 300px;
+    height: 50px;
+    text-align: center;
+    padding: 15px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    background: aliceblue;
+    vertical-align: middle;
+    display: inline-table;
+}
+
+.dufw-check-all-plugins, .dufw-check-all-themes
+{
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.dufw-wp-wrap {
+    padding: 10px;
+    padding-right: 40px;
+    width: 100%;
+}
+
+.dufw-bg-overlay #dufw-setting-container-form{
+    background: rgba(0,0,0,0.5);
+    z-index: 9;
+} 
+
+.dufw-bg-overlay #dufw-setting-container .dufw-card
+{
+    z-index: -1;
+}
+.toplevel_page_dufw_admin_menu_settings_page #message p
+{
+    font-size: 22px;
+    line-height: 26px;
+}
