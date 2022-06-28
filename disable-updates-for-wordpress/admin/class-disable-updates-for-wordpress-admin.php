@@ -94,11 +94,13 @@ class Disable_Updates_For_Wordpress_Admin {
 	{
 		# Wordpress Core Update
 		$dufw_wp = get_option('dufw-wp-update-disable');
-		$dufw_wp = !empty($dufw_wp) ? $dufw_wp : '';
+		$dufw_wp = !empty($dufw_wp) ? esc_attr($dufw_wp) : '';
 		if($dufw_wp == 'yes')
 		{
+			# check function exists
 			if ( !function_exists("remove_action") ) return;
 
+			# remove wp updates 
 			add_filter( 'pre_option_update_core', '__return_null' );
 			remove_action( 'wp_version_check', 'wp_version_check' );
 			remove_action( 'admin_init', '_maybe_update_core' );
@@ -113,8 +115,9 @@ class Disable_Updates_For_Wordpress_Admin {
 			remove_all_filters( 'plugins_api' );
 		}
 
+		# disable auto update
 		$dufw_auto_wp = get_option('dufw-all-auto-update-disable');
-		$dufw_auto_wp = !empty($dufw_auto_wp) ? $dufw_auto_wp : '';
+		$dufw_auto_wp = !empty($dufw_auto_wp) ? esc_attr($dufw_auto_wp) : '';
 		if($dufw_auto_wp == 'yes')
 		{
 			add_filter( 'auto_update_translation', '__return_false' );
@@ -145,7 +148,7 @@ class Disable_Updates_For_Wordpress_Admin {
 	 */
 	public function dufw_site_transient_update_plugins_callback($value)
 	{
-		# plugins
+		# disable update of plugins
 	    $dufw_plugins = get_option('dufw-plugin-disable');
 	    $dufw_plugins = !empty($dufw_plugins) ? $dufw_plugins : array();
 	    if(!empty($dufw_plugins))
@@ -153,7 +156,10 @@ class Disable_Updates_For_Wordpress_Admin {
 	    	foreach ($dufw_plugins as $key => $dufw_plugin) {
 	    		if(!empty($dufw_plugin))
 	    		{
-	    	 		unset($value->response[$dufw_plugin]);
+	    			if(isset($value->response[$dufw_plugin]))
+	    			{
+	    	 			unset($value->response[$dufw_plugin]);
+	    			}
 	    		}
 	    	}
 	    }
@@ -167,7 +173,7 @@ class Disable_Updates_For_Wordpress_Admin {
 	 */
 	public function dufw_site_transient_update_themes_callback($value)
 	{
-		# themes
+		# disable update of themes
 	    $dufw_themes = get_option('dufw-theme-disable');
 	    $dufw_themes = !empty($dufw_themes) ? $dufw_themes : array();
 	    if(!empty($dufw_themes))
@@ -175,7 +181,10 @@ class Disable_Updates_For_Wordpress_Admin {
 	    	foreach ($dufw_themes as $key => $dufw_theme) {
 	    		if(!empty($dufw_theme))
 	    		{
-	    	 		unset($value->response[$dufw_theme]);
+	    			if(isset($value->response[$dufw_theme]))
+	    			{
+	    	 			unset($value->response[$dufw_theme]);
+	    	 		}
 	    		}
 	    	}
 	    }
@@ -201,7 +210,7 @@ class Disable_Updates_For_Wordpress_Admin {
 	public function dufw_admin_notice_callback() {
 
 		# admin notice for form submit
-		if (!empty($_REQUEST['dufw-msg'])) 
+		if (isset($_REQUEST['dufw-msg']) && !empty($_REQUEST['dufw-msg'])) 
 		{
 			if($_REQUEST['dufw-msg'] == 'success')
 			{
@@ -219,7 +228,7 @@ class Disable_Updates_For_Wordpress_Admin {
 				$notice_class = 'notice-error';
 			}
 			# print admin notice
-			printf('<div id="message" class="notice '.$notice_class.' is-dismissible"><p>' . __('%s.', 'disable-updates-for-wordpress') . '</p></div>', $message);
+			printf('<div id="message" class="notice '.$notice_class.' is-dismissible"><p>' . __('%s.', 'disable-updates-for-wordpress') . '</p></div>', esc_attr($message));
 		}
 
 	}
@@ -351,7 +360,7 @@ class Disable_Updates_For_Wordpress_Admin {
 								        	<div class="input-row">
 										        <label class="dufw-check-all-plugins" for="dufw-check-all-plugins"><?php esc_html_e('Check all plugins','disable-updates-for-wordpress'); ?></label>
 									            <div class="toggle <?php echo esc_attr($all_plugin_class); ?>">
-									                <input type="checkbox" class="checkedAllplugin" name="dufw-plugin-all-disable" <?php echo esc_attr($all_plugin_checked); ?> value="<?php echo esc_attr('yes'); ?>" id="<?php esc_html_e('dufw-check-all-plugins','disable-updates-for-wordpress'); ?>">
+									                <input type="checkbox" class="checkedAllplugin" name="dufw-plugin-all-disable" <?php echo esc_attr($all_plugin_checked); ?> value="<?php echo esc_attr('yes'); ?>" id="<?php echo esc_attr('dufw-check-all-plugins'); ?>">
 									                <span class="slider"></span>
 									                <span class="label"><?php echo esc_attr($all_plugin_status); ?></span>
 									            </div>
@@ -366,11 +375,11 @@ class Disable_Updates_For_Wordpress_Admin {
 								        		$status_class = in_array($key , $dufw_plugins) ? 'on' : '';
 										        ?>
 								        		<div class="input-row">
-										            	<label for="<?php echo esc_html($TextDomain); ?>"><?php echo esc_html($pluginname); ?></label>
+										            	<label for="<?php echo esc_attr($TextDomain); ?>"><?php echo esc_html($pluginname); ?></label>
 										            <div class="toggle <?php echo esc_attr($status_class); ?>">
-										                <input class="checkSingleplugin" type="checkbox" name="dufw-plugin-disable[]" <?php echo esc_attr($plugin_checked); ?> value="<?php echo esc_attr($key); ?>" id="<?php echo esc_html($TextDomain); ?>">
+										                <input class="checkSingleplugin" type="checkbox" name="dufw-plugin-disable[]" <?php echo esc_attr($plugin_checked); ?> value="<?php echo esc_attr($key); ?>" id="<?php echo esc_attr($TextDomain); ?>">
 										                <span class="slider"></span>
-										                <span class="label"><?php echo esc_attr($plugin_status); ?></span>
+										                <span class="label"><?php echo esc_html($plugin_status); ?></span>
 										            </div>
 								        		</div>
 										        <?php 
@@ -393,9 +402,9 @@ class Disable_Updates_For_Wordpress_Admin {
 								        	<div class="input-row">
 										        <label class="dufw-check-all-themes" for="dufw-check-all-themes"><?php esc_html_e('Check all themes','disable-updates-for-wordpress'); ?></label>
 									            <div class="toggle <?php echo esc_attr($all_theme_class); ?>">
-									                <input type="checkbox" class="checkedAlltheme" name="dufw-theme-all-disable" <?php echo esc_attr($all_theme_checked); ?> value="<?php echo esc_attr('yes'); ?>" id="<?php esc_html_e('dufw-check-all-themes','disable-updates-for-wordpress'); ?>">
+									                <input type="checkbox" class="checkedAlltheme" name="dufw-theme-all-disable" <?php echo esc_attr($all_theme_checked); ?> value="<?php echo esc_attr('yes'); ?>" id="<?php echo esc_attr('dufw-check-all-themes'); ?>">
 									                <span class="slider"></span>
-									                <span class="label"><?php echo esc_attr($all_theme_status); ?></span>
+									                <span class="label"><?php echo esc_html($all_theme_status); ?></span>
 									            </div>
 							        		</div>
 								        	<?php
@@ -411,11 +420,11 @@ class Disable_Updates_For_Wordpress_Admin {
 								        		$theme_status_class = in_array($key , $dufw_themes) ? 'on' : '';
 										        ?>
 								        		<div class="input-row">
-										            <label for="<?php echo esc_html($themetd); ?>"><?php echo esc_html($themename); ?></label>
+										            <label for="<?php echo esc_attr($themetd); ?>"><?php echo esc_html($themename); ?></label>
 										            <div class="toggle <?php echo esc_attr($theme_status_class); ?>">
-										                <input type="checkbox" class="checkSingletheme" name="dufw-theme-disable[]" <?php echo esc_attr($theme_checked); ?> value="<?php echo esc_attr($key); ?>" id="<?php echo esc_html($themetd); ?>">
+										                <input type="checkbox" class="checkSingletheme" name="dufw-theme-disable[]" <?php echo esc_attr($theme_checked); ?> value="<?php echo esc_attr($key); ?>" id="<?php echo esc_attr($themetd); ?>">
 										                <span class="slider"></span>
-										                <span class="label"><?php echo esc_attr($theme_status); ?></span>
+										                <span class="label"><?php echo esc_html($theme_status); ?></span>
 										            </div>
 								        		</div>
 										        <?php 
@@ -435,9 +444,9 @@ class Disable_Updates_For_Wordpress_Admin {
 							        	<div class="input-row">
 									        <label class="dufw-check-wp" for="dufw-check-wp"><?php esc_html_e('Wordpress Core Update','disable-updates-for-wordpress'); ?></label>
 								            <div class="toggle <?php echo esc_attr($dufw_wp_class); ?>">
-								                <input type="checkbox" class="" name="dufw-wp-update-disable" <?php echo esc_attr($dufw_wp_checked); ?> value="<?php echo esc_attr('yes'); ?>" id="<?php esc_html_e('dufw-check-wp','disable-updates-for-wordpress'); ?>">
+								                <input type="checkbox" class="" name="dufw-wp-update-disable" <?php echo esc_attr($dufw_wp_checked); ?> value="<?php echo esc_attr('yes'); ?>" id="<?php echo esc_attr('dufw-check-wp'); ?>">
 								                <span class="slider"></span>
-								                <span class="label"><?php echo esc_attr($dufw_wp_status); ?></span>
+								                <span class="label"><?php echo esc_html($dufw_wp_status); ?></span>
 								            </div>
 						        		</div>
 									</div>
@@ -451,9 +460,9 @@ class Disable_Updates_For_Wordpress_Admin {
 							        	<div class="input-row">
 									        <label class="dufw-auto-wp" for="dufw-autp-wp"><?php esc_html_e('Disable All Auto Updates','disable-updates-for-wordpress'); ?></label>
 								            <div class="toggle <?php echo esc_attr($dufw_auto_class); ?>">
-								                <input type="checkbox" class="" name="dufw-all-auto-update-disable" <?php echo esc_attr($dufw_auto_checked); ?> value="<?php echo esc_attr('yes'); ?>" id="<?php esc_html_e('dufw-check-wp','disable-updates-for-wordpress'); ?>">
+								                <input type="checkbox" class="" name="dufw-all-auto-update-disable" <?php echo esc_attr($dufw_auto_checked); ?> value="<?php echo esc_attr('yes'); ?>" id="<?php echo esc_attr('dufw-check-wp'); ?>">
 								                <span class="slider"></span>
-								                <span class="label"><?php echo esc_attr($dufw_auto_status); ?></span>
+								                <span class="label"><?php echo esc_html($dufw_auto_status); ?></span>
 								            </div>
 						        		</div>
 									</div>

@@ -13,7 +13,7 @@
  * @package           Disable_Updates_For_Wordpress
  *
  * @wordpress-plugin
- * Plugin Name:       Disable Updates for WordPress
+ * Plugin Name:       Disable Updates by CV
  * Description:       Plugins, themes and the core update can be disabled from the setting page.
  * Version:           1.0.0
  * Author:            Chetan Vaghela

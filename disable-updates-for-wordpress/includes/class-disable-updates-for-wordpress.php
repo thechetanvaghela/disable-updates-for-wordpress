@@ -156,6 +156,7 @@ class Disable_Updates_For_Wordpress {
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		
 		# admin menu register
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'dufw_admin_menu_callback' );
 		# init action
